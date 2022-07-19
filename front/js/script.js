@@ -1,51 +1,65 @@
 // Création d'une fonction pour récupérer les produits
+let produits ;
 
-let produits;
-
-// Fetch l'API des fournitures
-const getProduits = async () => {
-    await fetch('http://localhost:3000/api/products') 
-        .then(res => res.json())
-        .then(JSON => produits = JSON) // transfo les données de l'API en json
-        .catch((error) => console.error(error));
-        console.log(produits)
+/**
+ * Fetch l'API des fournitures - Récupérer informations des produits
+ * @returns array
+ */
+function getProducts(){
+    return fetch('http://localhost:3000/api/products')
+    .then(res => {
+        if(res.ok){
+            return res.json();
+        }
+        else {
+            console.log("ERREUR");
+            document.getElementById('erreur').innerHTML = "Erreur de chargement des produits"
+        }
+    })
+}
+/**
+ * Récupérer l'ensemble des canapés
+ */
+const fillProduits = async() => {
+    var canape = await getProducts(); // 
+    console.log(canape);
+    for (let i = 0; i < canape.length; i++) { // plutôt que de tout mettre à l'intérieur de for, découper avec buildCard pour un code plus clair
+        let items = document.getElementById("items");
+            console.log(items);
+        items.appendChild(buildCard(canape[i]));
+    }
 };
 
-// Récupérer les détails des produits
-const fillProduits = async () => {  
-    await getProduits();
+/**
+ * 
+ * @param {*} canape 
+ * @returns {HTMLElement}
+ */
+let buildCard = (canape) => { 
+    let link = document.createElement("a");
+        link.setAttribute("href", "product.html?id=" + canape._id);
 
-    for (let i = 0; i < produits.length; i++) {
-
-        let items = document.getElementById("items");
-
-        // Afficher le lien
-        let link = document.createElement("a");
-        link.setAttribute('href', "product.html?id=" + produits[i]._id);
-        items.appendChild(link);
-
-        // Afficher la balise
+        // Afficher les balises articles
         let article = document.createElement("article");
         link.appendChild(article);
 
-        // Afficher l'image
+        // Afficher les images
         let images = document.createElement("img");
-        images.setAttribute('src', produits[i].imageUrl);
-        images.setAttribute('alt', produits[i].altTxt);
+        images.setAttribute("src", canape.imageUrl);
+        images.setAttribute("alt", canape.altTxt);
         article.appendChild(images);
 
-        // afficher le h3
+        // Afficher les h3
         let title = document.createElement("h3");
-        title.innerHTML = produits[i].name;
+        title.innerHTML = canape.name;
         article.appendChild(title);
 
-        // Afficher le p
+        // Afficher les p
         let description = document.createElement("p");
         article.appendChild(description);
-        description.innerHTML = produits[i].description;
-    }
-};
+        description.innerHTML = canape.description;
+
+        return link;
+}
+
 fillProduits();
-
-
-
