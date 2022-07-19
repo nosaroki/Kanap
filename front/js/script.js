@@ -1,66 +1,51 @@
-// Création d'une constante pour récupérer les produits
-const produits = document.getElementById('produits')
+// Création d'une fonction pour récupérer les produits
+
+let produits;
 
 // Fetch l'API des fournitures
-
-function getProducts(){
-    return fetch('http://localhost:3000/api/furniture')
-    .then(res => {
-        if(res.ok){
-            return res.json();
-        }
-        else {
-            console.log("ERREUR");
-            document.getElementById('erreur').innerHTML = "Erreur de chargement des produits"
-        }
-    })
-}
-
-
+const getProduits = async () => {
+    await fetch('http://localhost:3000/api/products') 
+        .then(res => res.json())
+        .then(JSON => produits = JSON) // transfo les données de l'API en json
+        .catch((error) => console.error(error));
+        console.log(produits)
+};
 
 // Récupérer les détails des produits
+const fillProduits = async () => {  
+    await getProduits();
 
+    for (let i = 0; i < produits.length; i++) {
 
-// Récupérer le nom
+        let items = document.getElementById("items");
 
+        // Afficher le lien
+        let link = document.createElement("a");
+        link.setAttribute('href', "product.html?id=" + produits[i]._id);
+        items.appendChild(link);
 
-// Récupérer le prix
+        // Afficher la balise
+        let article = document.createElement("article");
+        link.appendChild(article);
 
+        // Afficher l'image
+        let images = document.createElement("img");
+        images.setAttribute('src', produits[i].imageUrl);
+        images.setAttribute('alt', produits[i].altTxt);
+        article.appendChild(images);
 
-// Récupérer l'image
+        // afficher le h3
+        let title = document.createElement("h3");
+        title.innerHTML = produits[i].name;
+        article.appendChild(title);
 
-
-// Récupérer la description
-
-
-// Récupérer le texte alternatif
-
-
-
-
-
-// function templateCard(product){
-//     var template = document.querySelector("#card-product");
-//     var containerCards = document.querySelector("#cards");
-//     var clone = document.importNode(template.content, true);
-//     //remplissage img
-//     var img = clone.querySelector("img");
-//     img.setAttribute('src', product.imageUrl);
-//     //remplissage h2
-//     var h2 = clone.querySelector("h2");
-//     h2.textContent = product.name;
-//     // remplissage h3
-//     var h3 = clone.querySelector("h3");
-//     h3.textContent = (product.price / 100 + "€" );
-//     // remplissage a
-//     var a = clone.querySelector("a");
-//     a.setAttribute("href","/produit.html?id=" + product._id);
-
-
-//     containerCards.appendChild(clone);
-// }
-
-// 
+        // Afficher le p
+        let description = document.createElement("p");
+        article.appendChild(description);
+        description.innerHTML = produits[i].description;
+    }
+};
+fillProduits();
 
 
 
