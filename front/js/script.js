@@ -5,23 +5,20 @@ let produits ;
  * Fetch l'API des fournitures - Récupérer informations des produits
  * @returns array
  */
-function getProducts(){
-    return fetch('http://localhost:3000/api/products')
+function getProduits(){
+    return fetch("http://localhost:3000/api/products/")
     .then(res => {
         if(res.ok){
             return res.json();
         }
-        else {
-            console.log("ERREUR");
-            document.getElementById('erreur').innerHTML = "Erreur de chargement des produits"
-        }
     })
+    .catch(error => alert("Erreur de chargement des produits"));
 }
 /**
  * Récupérer l'ensemble des canapés
  */
 const fillProduits = async() => {
-    var canape = await getProducts(); // 
+    var canape = await getProduits(); // 
     console.log(canape);
     for (let i = 0; i < canape.length; i++) { // plutôt que de tout mettre à l'intérieur de for, découper avec buildCard pour un code plus clair
         let items = document.getElementById("items");
@@ -31,12 +28,12 @@ const fillProduits = async() => {
 };
 
 /**
- * 
  * @param {*} canape 
  * @returns {HTMLElement}
  */
 let buildCard = (canape) => { 
-    let link = document.createElement("a");
+        // Afficher les liens
+        let link = document.createElement("a");
         link.setAttribute("href", "product.html?id=" + canape._id);
 
         // Afficher les balises articles
