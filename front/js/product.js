@@ -92,17 +92,9 @@ function addToBasket() {
 
   if (productExists) {
     console.log("Le produit existe déjà.");
-    // for (i = 0; i < productInCart.length; i++) {
-    //   if (productInCart[i].id == productToAdd.id && productInCart[i].color == productToAdd.color) {
-    //     return (productToAdd.quantity++)
-    //   }
-    // }
       productExists.quantity = parseInt(productExists.quantity) + parseInt(productToAdd.quantity);
       console.log(productExists.quantity);
       localStorage.setItem("prod", JSON.stringify(productToAdd));
-   
-   
-    // Additionner la quantité du produit trouvé
   } 
   
   else {
