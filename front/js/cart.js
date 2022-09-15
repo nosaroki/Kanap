@@ -40,21 +40,21 @@ const fetchProducts = async () => {
     cartImg.setAttribute("alt", products[i].altTxt);
     divImg.appendChild(cartImg);
 
-    // // On ajoute la div qui contient la description
+    // // On ajoute la div qui contient les détails (div + h2 + p + p)
     let divDetails = document.createElement("div");
     divDetails.className = "cart__item__content";
     cartArticles.appendChild(divDetails);
+
+    // // On ajoute le h2 pour le nom du canapé
+    let itemTitle = document.createElement("h2");
+    itemTitle.innerText = products[i].name;
+    divDetails.appendChild(itemTitle);
 
     // // On ajoute la description
     let itemDescription = document.createElement("div");
     itemDescription.className = "cart__item__content__description";
     itemDescription.innerHTML = products[i].description;
     divDetails.appendChild(itemDescription);
-
-    // // On ajoute le h2 pour le nom du canapé
-    let itemTitle = document.createElement("h2");
-    itemTitle.innerText = products[i].name;
-    divDetails.appendChild(itemTitle);
 
     // // On ajoute le p pour la couleur du canapé
     let itemColor = document.createElement("p");
@@ -65,6 +65,42 @@ const fetchProducts = async () => {
     let itemPrice = document.createElement("p");
     itemPrice.innerText = products[i].price + "€";
     divDetails.appendChild(itemPrice);
+
+    // On ajoute une div qui contient les settings
+    let itemSettings = document.createElement("div");
+    itemSettings.className = "cart__item__content__settings";
+    cartArticles.appendChild(itemSettings);
+
+    // On ajoute une div qui contient la quantité
+    let itemSettingsQuantity = document.createElement("div");
+    itemSettingsQuantity.className = "cart__item__content__quantity";
+    itemSettings.appendChild(itemSettingsQuantity);
+
+    // On ajoute un p pour afficher la quantité
+    let itemQuantity = document.createElement("p");
+    itemQuantity.innerHTML = "Quantité : ";
+    itemSettingsQuantity.appendChild(itemQuantity);
+
+    // On ajoute l'input pour la quantité
+    let inputQuantity = document.createElement("input");
+    itemQuantity.appendChild(inputQuantity);
+    inputQuantity.value = addProduct[i].quantity;
+    inputQuantity.className = "itemQuantity";
+    inputQuantity.setAttribute("type", "number");
+    inputQuantity.setAttribute("min", "1");
+    inputQuantity.setAttribute("max", "100");
+    inputQuantity.setAttribute("name", "itemQuantity");
+
+    // On ajoute une div qui contiendra le bouton supprimer
+    let divDelete = document.createElement("div");
+    divDelete.className = "cart__item__content__settings__delete";
+    cartArticles.appendChild(divDelete);
+
+    // On créer le bouton supprimer
+    let deleteButton = document.createElement("p");
+    deleteButton.className = "deleteItem";
+    divDelete.appendChild(deleteButton);
+    deleteButton.innerHTML = "Supprimer";
   }
 };
 fetchProducts();
