@@ -102,5 +102,37 @@ const fetchProducts = async () => {
     divDelete.appendChild(deleteButton);
     deleteButton.innerHTML = "Supprimer";
   }
+
+  // Fin d'affichage des canapés dans le panier
+  //
+  //
+  // On créer une fonction pour afficher la quantité totale de produits ainsi que le prix total
+
+  const quantityAndPrice = () => {
+      // On affiche la quantité totale
+      let iQuantity = document.getElementsByClassName("itemQuantity"); // On l'associe à "itemQuantity"
+      let productQuantity = iQuantity.length; // On store la quantité de canapés dans une variable
+      totalQuantity = 0; // On initialise la quantité totale à 0
+
+      for (let j = 0; j < productQuantity; j++) {
+          totalQuantity += iQuantity[j].valueAsNumber; // On récupère la quantité dans le tableau
+      }
+
+      let quantityValue = document.getElementById ('totalQuantity'); // On l'associe à l'id totalQuantity
+      quantityValue.innerHTML = totalQuantity; // 
+
+      // On affiche le prix total
+      totalPrice = 0; // On initialise le prix total à 0
+
+      for (let k = 0; k < productQuantity; k++) {
+          totalPrice += (iQuantity[k].valueAsNumber * products[k].price); // On indique que le prix total est égal à la quantité du produit * son prix
+      }
+
+      let itemTotalPrice = document.getElementById("totalPrice"); // On l'associe à l'id "totalPrice"
+      itemTotalPrice.innerHTML = totalPrice;
+};
+quantityAndPrice();
+
+
 };
 fetchProducts();
