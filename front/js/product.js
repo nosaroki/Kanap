@@ -94,7 +94,7 @@ function addToBasket() {
     console.log("Le produit existe déjà.");
       productExists.quantity = parseInt(productExists.quantity) + parseInt(productToAdd.quantity);
       console.log(productExists.quantity);
-      localStorage.setItem("prod", JSON.stringify(productToAdd));
+      localStorage.setItem("cart", JSON.stringify(productToAdd));
   } 
   
   else {
