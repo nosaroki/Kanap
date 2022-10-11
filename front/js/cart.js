@@ -4,7 +4,7 @@ const fetchProducts = async () => {
   await fetch("http://localhost:3000/api/products") // on va chercher l'API avec la methode fetch
     .then((res) => res.json())
     .then((json) => (products = json)) // on fait une promesse en renvoyant la réponse au format JSON. // on définit un paramètre pour products en réutilisant .then
-    .catch((error) => console.error(error));
+    .catch((error) => alert("Erreur de chargement du panier"));
 
   // On récupère le contenu du LS
   let addProduct = JSON.parse(localStorage.getItem("cart"));
@@ -20,6 +20,8 @@ const fetchProducts = async () => {
 
   // On créé une boucle pour afficher les canapés et leurs caractéristiques
   for (let i = 0; i < addProduct.length; i++) {
+    let canapAPI = products.find(p => p._id == addProduct[i].id) 
+    console.log(canapAPI);
     let cartItems = document.getElementById("cart__items");
 
     // On ajoute l'element article
@@ -36,8 +38,8 @@ const fetchProducts = async () => {
 
     // // On ajoute l'élément img à la div
     let cartImg = document.createElement("img");
-    cartImg.setAttribute("src", products[i].imageUrl); // addProduct[i], produit, produits, divImg, cartArticles, cartItems, image, images
-    cartImg.setAttribute("alt", products[i].altTxt);
+    cartImg.setAttribute("src", canapAPI.imageUrl); // addProduct[i], produit, produits, divImg, cartArticles, cartItems, image, images
+    cartImg.setAttribute("alt", canapAPI.altTxt);
     divImg.appendChild(cartImg);
 
     // // On ajoute la div qui contient les détails (div + h2 + p + p)
@@ -47,7 +49,7 @@ const fetchProducts = async () => {
 
     // // On ajoute le h2 pour le nom du canapé
     let itemTitle = document.createElement("h2");
-    itemTitle.innerText = products[i].name;
+    itemTitle.innerText = canapAPI.name;
     divDetails.appendChild(itemTitle);
 
     // // On ajoute le p pour la couleur du canapé
@@ -57,7 +59,7 @@ const fetchProducts = async () => {
 
     // // On ajoute le p pour le prix du canapé
     let itemPrice = document.createElement("p");
-    itemPrice.innerText = products[i].price + "€";
+    itemPrice.innerText = canapAPI.price + "€";
     divDetails.appendChild(itemPrice);
 
     // On ajoute une div qui contient les settings
@@ -140,22 +142,20 @@ const fetchProducts = async () => {
             )
           );
 
-          var newQuantity = e.target.value;
-          var colorProduct =
+          let newQuantity = e.target.value;
+          let colorProduct =
             e.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute(
               "data-color"
             );
-          var idProduct =
+          let idProduct =
             e.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute(
               "data-id"
             );
-          var indexCanap = addProduct.findIndex(
+          let indexCanap = addProduct.findIndex(
             (canap) => canap.id == idProduct && canap.color == colorProduct
           );
           addProduct[indexCanap].quantity = newQuantity;
           console.log(addProduct);
-
-          let inputValueQuantity = modifyQuantity[l].valueAsNumber; // On stocke la quantité dans la variable inputQuantityValue
 
           quantityAndPrice(); // On appelle la fonction Q&P pour qu'elle se mette à jour
           console.log(totalQuantity);
@@ -326,7 +326,6 @@ function validForm(){
                 email: inputEmail.value,
             },
         } 
-///
         const options = {
             method: 'POST',
             body: JSON.stringify(order),
@@ -340,8 +339,7 @@ function validForm(){
         .then((data) => {
             console.log(data);
             localStorage.clear();
-            localStorage.setItem("orderId", data.orderId);
-            document.location.href = "confirmation.html";
+            document.location.href = "confirmation.html?id=" + data.orderId;
         })
         .catch((err) => {
             alert ("une erreur est survenue lors de l'envoi du formulaire, veuillez réessayer");

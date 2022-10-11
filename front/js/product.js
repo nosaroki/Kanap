@@ -4,7 +4,7 @@
 /**
  * Récupérer l'idProduit avec les paramètres de l'URL
  */
-var idProduit = new URL(window.location.href).searchParams.get("id");
+let idProduit = new URL(window.location.href).searchParams.get("id");
 console.log(idProduit);
 
 /**
@@ -27,8 +27,9 @@ let price = document.getElementById("price");
 let description = document.getElementById("description");
 let colorsArray = document.getElementById("colors");
 
-// Afficher les détails
-
+/**
+ * Afficher les détails
+ */
 const showProduit = async () => {
   await getProduit();
   // Créer et remplir la balise image
@@ -57,14 +58,14 @@ const showProduit = async () => {
 showProduit();
 
 /**
- * Ajouter la quantité et la couleur dans le panier + idProduit
+ * Ajouter la quantité, la couleur + idProduit dans le panier
  */
 
 function addToBasket() {
   // créer une fonction qui permet de récupérer et d'afficher la couleur, la quantité choisies ainsi que l'idProduit
   console.log("hello");
-  var color = document.getElementById("colors").value;
-  var quantity = document.getElementById("quantity").value;
+  let color = document.getElementById("colors").value;
+  let quantity = document.getElementById("quantity").value;
   console.log(color, quantity, idProduit);
   let productToAdd = {
     id: idProduit,
@@ -84,6 +85,7 @@ function addToBasket() {
   } else {
     productInCart = JSON.parse(productInCart);
   }
+  // On fait un find pour renvoyer le produit qui correspond à ces conditions
   let productExists = productInCart.find(
     (product) =>
       product.id == productToAdd.id && product.color == productToAdd.color
@@ -96,15 +98,14 @@ function addToBasket() {
       console.log(productExists.quantity);
       localStorage.setItem("cart", JSON.stringify(productToAdd));
   } 
-  
   else {
     productInCart.push(productToAdd);
   }
   localStorage.setItem("cart", JSON.stringify(productInCart));
 }
-var button = document.getElementById("addToCart");
+let button = document.getElementById("addToCart");
 button.addEventListener("click", function () {
-  addToBasket();
+  addToBasket((alert("Votre produit a bien été ajouté au panier.")));
 });
 
 

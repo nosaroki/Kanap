@@ -1,7 +1,6 @@
 function launchId(){
-    const idNode = document.getElementById("orderId");
-    idNode.innerText = localStorage.getItem("orderId");
-    console.log(localStorage.getItem("orderId"))
-    localStorage.clear;
+    let idOrder = new URL(window.location.href).searchParams.get("id");
+    const showId = document.getElementById("orderId");
+    showId.innerText = idOrder;
 }
 launchId();

@@ -18,7 +18,7 @@ function getProduits(){
  * Récupérer l'ensemble des canapés
  */
 const fillProduits = async() => {
-    var canape = await getProduits(); // 
+    let canape = await getProduits(); // 
     console.log(canape);
     for (let i = 0; i < canape.length; i++) { // plutôt que de tout mettre à l'intérieur de for, découper avec buildCard pour un code plus clair
         let items = document.getElementById("items");
