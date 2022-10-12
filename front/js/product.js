@@ -101,6 +101,16 @@ function addToBasket() {
   else {
     productInCart.push(productToAdd);
   }
+  //////////////////
+  if(quantity <= 0 || quantity > 100){
+    productExists == 0;
+    (alert("La quantité demandée n'est pas disponible."))
+  }
+  // if(productToAdd.color = 0){
+  //   productExists == 0;
+  //   (alert("Vous n'avez pas sélectionné de couleur."))
+  // }
+  //////////////////
   localStorage.setItem("cart", JSON.stringify(productInCart));
 }
 let button = document.getElementById("addToCart");

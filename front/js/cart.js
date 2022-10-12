@@ -1,9 +1,9 @@
 // Fonction pour récupérer les données de l'api
 let products;
 const fetchProducts = async () => {
-  await fetch("http://localhost:3000/api/products") // on va chercher l'API avec la methode fetch
+  await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
-    .then((json) => (products = json)) // on fait une promesse en renvoyant la réponse au format JSON. // on définit un paramètre pour products en réutilisant .then
+    .then((json) => (products = json)) // On fait une promesse en renvoyant la réponse au format JSON
     .catch((error) => alert("Erreur de chargement du panier"));
 
   // On récupère le contenu du LS
@@ -20,7 +20,7 @@ const fetchProducts = async () => {
 
   // On créé une boucle pour afficher les canapés et leurs caractéristiques
   for (let i = 0; i < addProduct.length; i++) {
-    let canapAPI = products.find(p => p._id == addProduct[i].id) 
+    let canapAPI = products.find((p) => p._id == addProduct[i].id);
     console.log(canapAPI);
     let cartItems = document.getElementById("cart__items");
 
@@ -155,6 +155,11 @@ const fetchProducts = async () => {
             (canap) => canap.id == idProduct && canap.color == colorProduct
           );
           addProduct[indexCanap].quantity = newQuantity;
+          /////////////////
+          if(newQuantity <= 0 || newQuantity > 100){
+            (alert("La quantité demandée n'est pas disponible."))
+          }
+          /////////////////
           console.log(addProduct);
 
           quantityAndPrice(); // On appelle la fonction Q&P pour qu'elle se mette à jour
@@ -197,153 +202,158 @@ fetchProducts();
  */
 
 function makeForm() {
+  let form = document.querySelector("form");
 
-let form = document.querySelector("form");
+  // On définit les expressions régulières à utiliser
 
-// On définit les expressions régulières à utiliser
+  let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+  let addressRegExp = new RegExp(
+    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+  );
+  let emailRegExp = new RegExp(
+    "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+    
+  );
 
-let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-let addressRegExp = new RegExp(
-  "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
-);
-let emailRegExp = new RegExp(
-  "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
-);
+  // On écoute la modification du prénom
+  form.firstName.addEventListener("change", function () {
+    validFirstName(this);
+  });
 
-// On écoute la modification du prénom
-form.firstName.addEventListener("change", function () {
-  validFirstName(this);
-});
+  // On valide le prénom
+  const validFirstName = function (inputFirstName) {
+    let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
-// On valide le prénom
-const validFirstName = function (inputFirstName) {
-  let firstNameErrorMsg = inputFirstName.nextElementSibling;
+    if (charRegExp.test(inputFirstName.value)) {
+      firstNameErrorMsg.innerHTML = "";
+    } else {
+      firstNameErrorMsg.innerHTML = "Votre prénom n'est pas valide";
+    }
+  };
 
-  if (charRegExp.test(inputFirstName.value)) {
-    firstNameErrorMsg.innerHTML = "";
-  } else {
-    firstNameErrorMsg.innerHTML = "Votre prénom n'est pas valide";
-  }
-};
+  // // On écoute la modification du nom
+  form.lastName.addEventListener("change", function () {
+    validLastName(this);
+  });
 
-// // On écoute la modification du nom
-form.lastName.addEventListener("change", function () {
-  validLastName(this);
-});
+  // On valide le nom
+  const validLastName = function (inputLastName) {
+    let lastNameErrorMsg = inputLastName.nextElementSibling;
 
-// On valide le nom
-const validLastName = function (inputLastName) {
-  let lastNameErrorMsg = inputLastName.nextElementSibling;
+    if (charRegExp.test(inputLastName.value)) {
+      lastNameErrorMsg.innerHTML = "";
+    } else {
+      lastNameErrorMsg.innerHTML = "Votre nom n'est pas valide";
+    }
+  };
 
-  if (charRegExp.test(inputLastName.value)) {
-    lastNameErrorMsg.innerHTML = "";
-  } else {
-    lastNameErrorMsg.innerHTML = "Votre nom n'est pas valide";
-  }
-};
-
-// On écoute la modification de l'adresse
-form.address.addEventListener("change", function () {
+  // On écoute la modification de l'adresse
+  form.address.addEventListener("change", function () {
     validAddress(this);
-});
+  });
 
-// On valide l'adresse
-const validAddress = function (inputAddress) {
+  // On valide l'adresse
+  const validAddress = function (inputAddress) {
     let addressErrorMsg = inputAddress.nextElementSibling;
 
     if (addressRegExp.test(inputAddress.value)) {
-        addressErrorMsg.innerHTML = "";
+      addressErrorMsg.innerHTML = "";
     } else {
-        addressErrorMsg.innerHTML = "Votre adresse n'est pas valide";
+      addressErrorMsg.innerHTML = "Votre adresse n'est pas valide";
     }
-};
+  };
 
-// On écoute la modification de la ville
-form.city.addEventListener("change", function () {
+  // On écoute la modification de la ville
+  form.city.addEventListener("change", function () {
     validCity(this);
-});
+  });
 
-// On valide la ville
-const validCity = function (inputCity) {
+  // On valide la ville
+  const validCity = function (inputCity) {
     let cityErrorMsg = inputCity.nextElementSibling;
 
-        if (charRegExp.test(inputCity.value)) {
-            cityErrorMsg.innerHTML = "";
-        } else {
-            cityErrorMsg.innerHTML = "Votre ville n'est pas valide";
-        }
-};
+    if (charRegExp.test(inputCity.value)) {
+      cityErrorMsg.innerHTML = "";
+    } else {
+      cityErrorMsg.innerHTML = "Votre ville n'est pas valide";
+    }
+  };
 
-// On écoute la modification de l'email
-form.email.addEventListener("change", function () {
+  // On écoute la modification de l'email
+  form.email.addEventListener("change", function () {
     validEmail(this);
-});
+  });
 
-// On valide l'email
-const validEmail = function (inputEmail) {
+  // On valide l'email
+  const validEmail = function (inputEmail) {
     let emailErrorMsg = inputEmail.nextElementSibling;
 
     if (emailRegExp.test(inputEmail.value)) {
-        emailErrorMsg.innerHTML = "";
+      emailErrorMsg.innerHTML = "";
     } else {
-        emailErrorMsg.innerHTML = "Votre adresse e-mail n'est pas valide";
+      emailErrorMsg.innerHTML = "Votre adresse e-mail n'est pas valide";
     }
-};
+  };
 }
 makeForm();
 
 /**
  * On récupère les infos renseignées dans le form pour les mettre dans le LS
  */
-function validForm(){
-    let addProduct = JSON.parse(localStorage.getItem("cart"));
-    let orderButton = document.getElementById("order");
+function validForm() {
+  let addProduct = JSON.parse(localStorage.getItem("cart"));
+  let orderButton = document.getElementById("order");
 
-    //Ecouter le panier
-    orderButton.addEventListener("click", (event) => {
-    
-        //Récupération des coordonnées du formulaire client
-        let inputFirstName = document.getElementById('firstName');
-        let inputLastName = document.getElementById('lastName');
-        let inputAddress = document.getElementById('address');
-        let inputCity = document.getElementById('city');
-        let inputEmail = document.getElementById('email');
+  //Ecouter le panier
 
-        //Construction d'un array depuis le local storage
-        let orderedProducts = [];
-        for (let i = 0; i < addProduct.length; i++) {
-            orderedProducts.push(addProduct[i].id);
-        }
-        console.log(orderedProducts);
+  orderButton.addEventListener("click", (event) => {
+    //Récupération des coordonnées du formulaire client
+    let inputFirstName = document.getElementById("firstName");
+    let inputLastName = document.getElementById("lastName");
+    let inputAddress = document.getElementById("address");
+    let inputCity = document.getElementById("city");
+    let inputEmail = document.getElementById("email");
 
-        const order = {
-            products: orderedProducts,
-            contact : {
-                firstName: inputFirstName.value,
-                lastName: inputLastName.value,
-                address: inputAddress.value,
-                city: inputCity.value,
-                email: inputEmail.value,
-            },
-        } 
-        const options = {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: {
-                "Content-Type": "application/json"
-            },
-        };
+    //Construction d'un array depuis le local storage
+    let orderedProducts = [];
+    for (let i = 0; i < addProduct.length; i++) {
+      orderedProducts.push(addProduct[i].id);
+    }
+    console.log(orderedProducts);
 
-        fetch("http://localhost:3000/api/products/order", options)
+    const order = {
+      products: orderedProducts,
+      contact: {
+        firstName: inputFirstName.value,
+        lastName: inputLastName.value,
+        address: inputAddress.value,
+        city: inputCity.value,
+        email: inputEmail.value,
+      },
+    };
+    const options = {
+      method: "POST", // Pour transmettre les informations/données de l'utilisateur
+      body: JSON.stringify(order),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+      fetch("http://localhost:3000/api/products/order", options)
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
-            localStorage.clear();
-            document.location.href = "confirmation.html?id=" + data.orderId;
+          console.log(data);
+          localStorage.clear();
+          document.location.href = "confirmation.html?id=" + data.orderId; // On passe l'id de commande dans l'URL
         })
         .catch((err) => {
-            alert ("une erreur est survenue lors de l'envoi du formulaire, veuillez réessayer");
+          alert(
+            "une erreur est survenue lors de l'envoi du formulaire, veuillez réessayer"
+          );
         });
-        })
+    
+  });
 }
 validForm();
+
+// if (order != 0){}
+// if (products != 0 && contact != 0){}
