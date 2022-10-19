@@ -19,6 +19,9 @@ const fetchProducts = async () => {
   cartDisplay();
 
   // On créé une boucle pour afficher les canapés et leurs caractéristiques
+  if (addProduct == null) {
+    addProduct = [];
+  }
   for (let i = 0; i < addProduct.length; i++) {
     let canapAPI = products.find((p) => p._id == addProduct[i].id);
     console.log(canapAPI);
@@ -197,133 +200,89 @@ const fetchProducts = async () => {
 
 fetchProducts();
 
+// L'affichage des produits du panier est terminé
+
 /**
  * On créer les RegEx pour le formulaire
  */
-function validForm() {
-  function makeForm() {
-    let form = document.querySelector("form");
 
-    // On définit les expressions régulières à utiliser
-
-    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-    let addressRegExp = new RegExp(
-      "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
-    );
-    let emailRegExp = new RegExp(
-      "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
-    );
-
-    // On écoute la modification du prénom
-    form.firstName.addEventListener("change", function () {
-      validFirstName(this);
-    });
-
-    // On valide le prénom
-    const validFirstName = function (inputFirstName) {
-      let firstNameErrorMsg = inputFirstName.nextElementSibling;
-
-      if (charRegExp.test(inputFirstName.value)) {
-        firstNameErrorMsg.innerHTML = "";
-      } else {
-        firstNameErrorMsg.innerHTML = "Votre prénom n'est pas valide";
-      }
-    };
-
-    // // On écoute la modification du nom
-    form.lastName.addEventListener("change", function () {
-      validLastName(this);
-    });
-
-    // On valide le nom
-    const validLastName = function (inputLastName) {
-      let lastNameErrorMsg = inputLastName.nextElementSibling;
-
-      if (charRegExp.test(inputLastName.value)) {
-        lastNameErrorMsg.innerHTML = "";
-      } else {
-        lastNameErrorMsg.innerHTML = "Votre nom n'est pas valide";
-      }
-    };
-
-    // On écoute la modification de l'adresse
-    form.address.addEventListener("change", function () {
-      validAddress(this);
-    });
-
-    // On valide l'adresse
-    const validAddress = function (inputAddress) {
-      let addressErrorMsg = inputAddress.nextElementSibling;
-
-      if (addressRegExp.test(inputAddress.value)) {
-        addressErrorMsg.innerHTML = "";
-      } else {
-        addressErrorMsg.innerHTML = "Votre adresse n'est pas valide";
-      }
-    };
-
-    // On écoute la modification de la ville
-    form.city.addEventListener("change", function () {
-      validCity(this);
-    });
-
-    // On valide la ville
-    const validCity = function (inputCity) {
-      let cityErrorMsg = inputCity.nextElementSibling;
-
-      if (charRegExp.test(inputCity.value)) {
-        cityErrorMsg.innerHTML = "";
-      } else {
-        cityErrorMsg.innerHTML = "Votre ville n'est pas valide";
-      }
-    };
-
-    // On écoute la modification de l'email
-    form.email.addEventListener("change", function () {
-      validEmail(this);
-    });
-
-    // On valide l'email
-    const validEmail = function (inputEmail) {
-      let emailErrorMsg = inputEmail.nextElementSibling;
-
-      if (emailRegExp.test(inputEmail.value)) {
-        emailErrorMsg.innerHTML = "";
-      } else {
-        emailErrorMsg.innerHTML = "Votre adresse e-mail n'est pas valide";
-      }
-    };
-  }
-  makeForm();
-
-  /**
-   * On récupère les infos renseignées dans le form pour les mettre dans le LS
-   */
-
-  let addProduct = JSON.parse(localStorage.getItem("cart"));
+function ValidationForm() {
   let form = document.querySelector("form");
+  // Initialisation de nos variables de test.
+  const stringRegex = /^[a-zA-Z-]{3,}$/;
+  const emailRegex = /^\w+([.-]?\w+)@\w+([.-]?\w+).(.\w{2,3})+$/;
+  const addressRegex = /^[a-zA-Z0-9\s,.'-]{3,}$/;
+  let control = true;
 
-  //Ecouter le panier
+  // Si une des valeurs dans nos inputs de notre Form on affiche un méssage d'érreur.
+  // On écoute la modification du prénom
 
-  form.addEventListener("submit", (event) => {
+  if (!form.firstName.value.match(stringRegex)) {
+    document.getElementById("firstNameErrorMsg").innerText =
+      "Votre prénom n'est pas valide";
+    control = false;
+    // Sinon on affiche rien
+  } else {
+    document.getElementById("firstNameErrorMsg").innerText = "";
+  }
+  // On écoute la modification du nom
+  if (!form.lastName.value.match(stringRegex)) {
+    document.getElementById("lastNameErrorMsg").innerText =
+      "Votre nom n'est pas valide";
+    control = false;
+    // Sinon on affiche rien
+  } else {
+    document.getElementById("lastNameErrorMsg").innerText = "";
+  }
+  // On écoute la modification de l'adresse
+  if (!form.address.value.match(addressRegex)) {
+    document.getElementById("addressErrorMsg").innerText =
+      "Votre adresse n'est pas valide";
+    control = false;
+    // Sinon on affiche rien
+  } else {
+    document.getElementById("addressErrorMsg").innerText = "";
+  }
+  // On écoute la modification de la ville
+  if (!form.city.value.match(stringRegex)) {
+    document.getElementById("cityErrorMsg").innerText =
+      "Votre ville n'est pas valide";
+    control = false;
+    // Sinon on affiche rien
+  } else {
+    document.getElementById("cityErrorMsg").innerText = "";
+  }
+  // On écoute la modification de l'émail
+  if (!form.email.value.match(emailRegex)) {
+    document.getElementById("emailErrorMsg").innerText =
+      "Votre e-mail n'est pas valide";
+    control = false;
+    // Sinon on affiche rien
+  } else {
+    document.getElementById("emailErrorMsg").innerText = "";
+  }
+  if (control) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * On récupère les infos renseignées dans le form pour les mettre dans le LS et les push
+ */
+function Validation() {
+  let addProduct = JSON.parse(localStorage.getItem("cart"));
+  let orderButton = document.getElementById("order");
+  console.log(addProduct);
+  if (addProduct == null) {
+    alert("Votre panier est vide");
+    return false;
+  }
+
+  orderButton.addEventListener("click", function (event) {
+    let form = document.querySelector(".cart__order__form");
     event.preventDefault();
-    // form.reportValidity;
-
-    //Récupération des coordonnées du formulaire client
-    let inputFirstName = document.getElementById("firstName");
-    let inputLastName = document.getElementById("lastName");
-    let inputAddress = document.getElementById("address");
-    let inputCity = document.getElementById("city");
-    let inputEmail = document.getElementById("email"); 
-    
-    ///////////////
-    //On teste les inputs avec les RegExp
-    // inputFirstName.value.reportValidity,
-    // inputLastName.value.reportValidity,
-    // inputAddress.value.reportValidity,
-    // inputCity.value.reportValidity,
-    // inputEmail.value.reportValidity
-    ///////////////////
 
     //Construction d'un array depuis le local storage
     let orderedProducts = [];
@@ -331,48 +290,45 @@ function validForm() {
       orderedProducts.push(addProduct[i].id);
     }
     console.log(orderedProducts);
+    if (ValidationForm()) {
+      if (localStorage.length !== 0) {
+        // On créer un object avec nos valeurs du formulaire.
+        let order = {
+          products: orderedProducts,
+          contact: {
+            firstName: form.firstName.value,
+            lastName: form.lastName.value,
+            address: form.address.value,
+            city: form.city.value,
+            email: form.email.value,
+          },
+        };
 
-    const order = {
-      products: orderedProducts,
-      contact: {
-        firstName: inputFirstName.value,
-        lastName: inputLastName.value,
-        address: inputAddress.value,
-        city: inputCity.value,
-        email: inputEmail.value,
-      },
-    };
-    const options = {
-      method: "POST", // Pour transmettre les informations/données de l'utilisateur
-      body: JSON.stringify(order),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    /////////////////
+        /**
+         * On récupère les infos renseignées dans le form pour les mettre dans le LS
+         */
+        const options = {
+          method: "POST", // Pour transmettre les informations/données de l'utilisateur
+          body: JSON.stringify(order),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
 
-    // let contactRegexEnd = true;
-    // for (let j = 0; j < order.length; j++) {
-    //   if (order[j] == false) contactRegexEnd = false;
-    // }
-    // if (contactRegexEnd == true) {
-      /////////////////
-      fetch("http://localhost:3000/api/products/order", options)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          localStorage.clear();
-          document.location.href = "confirmation.html?id=" + data.orderId; // On passe l'id de commande dans l'URL
-        })
-        .catch((err) => {
-          alert(
-            "une erreur est survenue lors de l'envoi du formulaire, veuillez réessayer"
-          );
-        });
-    // }
+        fetch("http://localhost:3000/api/products/order", options)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            localStorage.clear();
+            document.location.href = "confirmation.html?id=" + data.orderId; // On passe l'id de commande dans l'URL
+          })
+          .catch((err) => {
+            alert(
+              "une erreur est survenue lors de l'envoi du formulaire, veuillez réessayer"
+            );
+          });
+      }
+    }
   });
 }
-validForm();
-
-// if (order != 0){}
-// if (products != 0 && contact != 0){}
+Validation();
